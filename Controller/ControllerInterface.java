@@ -1,5 +1,9 @@
 package Controller;
 
-public interface ControllerInterface {
+import java.awt.event.KeyEvent;
 
+public interface ControllerInterface {
+	
+	void keyPressed(KeyEvent e);
+	 void keyReleased(KeyEvent e);
 }

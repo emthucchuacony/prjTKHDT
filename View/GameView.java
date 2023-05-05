@@ -1,72 +1,63 @@
 package View;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import Controller.ControllerInterface;
-import FinalVariable.FinalVariable;
-import Model.Ball;
-import Model.ModelInterface;
-import Model.Paddle;
-import Model.Score;
-import Observer.Observer;
-import java.awt.*;
 
-public class GameView  extends JFrame implements Observer , Runnable{
+
+
+import Model.ModelInterface;
+
+import Observer.Observer;
+import Test.FinalVariable;
+
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+public class GameView extends JPanel implements Observer, Runnable {
 	ModelInterface model;
 	ControllerInterface controller;
 	JFrame viewFrame;
-	JPanel viewPanel;
-	Ball ball;
-	Paddle paddleLeft;
-	Paddle paddleRight;
-	Score score;
+
 	Thread gameThread;
 	Image image;
 	Graphics graphics;
 	FinalVariable var;
-	
-	
-	
 
 	public GameView(ModelInterface model, ControllerInterface controller) {
-		
+
 		this.model = model;
 		this.controller = controller;
-		model.registerObs((	Observer) this);
-		
+		model.registerObs((Observer) this);
+		createView();	
+		createControl();
+
 	}
+
 	public void createView() {
 		// create all Swing components here
-		newPaddles();
-		viewFrame = new JFrame();
-		
-		
-		
-		viewFrame.setTitle("Pong Game");
-		viewFrame.setResizable(false);
+		model.newScore();
+		model.newPaddles();
+		model.newBall();
+		this.setFocusable(true);
 
-		viewFrame.setBackground(Color.BLACK);
-		viewFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		viewFrame.pack();
-		
-		viewFrame.setLocationRelativeTo(null);
-		viewFrame.setPreferredSize(var.SCREEN_SIZE);
+		this.setPreferredSize(var.SCREEN_SIZE);
+
+	}
+	public void createControl() {
+		this.addKeyListener(new AL());
 		gameThread = new Thread(this);
 		gameThread.start();
-		viewFrame.setVisible(true);
-		}
+	}
+	
 
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -83,33 +74,39 @@ public class GameView  extends JFrame implements Observer , Runnable{
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			if (delta >= 1) {
-//				model.move();
-//				model.checkCollision();
+				model.move();
+				model.checkColision();
 				repaint();
 				delta--;
 			}
 		}
 
 	}
-	public void newPaddles() {
-		paddleLeft = new Paddle(0, (FinalVariable.GAME_HEIGHT / 2) - (FinalVariable.PADDLE_HEIGHT / 2), FinalVariable.PADDLE_WIDTH, FinalVariable.PADDLE_HEIGHT,
-				1);
-		paddleRight = new Paddle(FinalVariable.GAME_WIDTH - FinalVariable.PADDLE_WIDTH, (FinalVariable.GAME_HEIGHT / 2) - (FinalVariable.PADDLE_HEIGHT / 2),
-				FinalVariable.PADDLE_WIDTH, FinalVariable.PADDLE_HEIGHT, 2);
-	}
+
 	public void paint(Graphics g) {
-		image =createImage(getWidth(),getHeight());
+		image = createImage(getWidth(), getHeight());
 		graphics = image.getGraphics();
 		draw(graphics);
-		g.drawImage(image,0,0,this);
+		g.drawImage(image, 0, 0, this);
 	}
+
 	public void draw(Graphics g) {
-		paddleLeft.draw(g);
-		paddleRight.draw(g);
-
+		model.getPaddle1().draw(g);
+		model.getPaddle2().draw(g);
+		model.getScore().draw(g);
+		model.getBall().draw(g);
 
 	}
-		
+	public class AL extends KeyAdapter{
+		public void keyPressed(KeyEvent e) {
+			controller.keyPressed(e);
+			
+		}
+		public void keyReleased(KeyEvent e) {
+			controller.keyReleased(e);
+			
+		}
+	}
 	
 
 }
