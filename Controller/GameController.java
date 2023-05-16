@@ -2,6 +2,8 @@ package Controller;
 
 import java.awt.event.KeyEvent;
 
+import javax.swing.JOptionPane;
+
 import Model.GameModel;
 import Model.ModelInterface;
 import View.GameView;
@@ -14,8 +16,8 @@ public class GameController implements ControllerInterface {
 		
 		this.model = model;
 		view = new GameView(model, this);
-		
-		System.out.println("GameView created and displayed");
+	
+		startGame();
 	}
 	
 	@Override
@@ -90,6 +92,32 @@ public class GameController implements ControllerInterface {
 		            model.getPaddle2().setYDirection(0);
 		        }
 		    }
+		
+	}
+
+	@Override
+	public void startGame() {
+		model.newBall();
+		model.newPaddles();
+		model.newScore();
+		
+	}
+
+	@Override
+	public void openMore() {
+		view.moreMenu();
+		
+	}
+
+	@Override
+	public void openHelp() {
+	    view.helpMenu();
+	}
+
+
+	@Override
+	public void exitGame() {
+		view.exitMenu();
 		
 	}
 	

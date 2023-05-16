@@ -14,6 +14,7 @@ public interface ModelInterface {
 	Ball getBall();
 	void move();
 	void checkColision();
+	boolean isGameOver();
 	
 
 }
