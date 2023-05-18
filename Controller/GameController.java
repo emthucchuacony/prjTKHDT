@@ -1,25 +1,31 @@
 package Controller;
 
+import java.awt.Color;
+import java.awt.Menu;
 import java.awt.event.KeyEvent;
 
-import javax.swing.JOptionPane;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import Model.GameModel;
 import Model.ModelInterface;
+import View.GameMenu;
 import View.GameView;
 
 public class GameController implements ControllerInterface {
 	GameView view;
+	GameMenu menu;
 	ModelInterface model ;
+	GameController control;
 	
 	public GameController(GameModel model) {
-		
 		this.model = model;
 		view = new GameView(model, this);
-	
-		startGame();
-	}
-	
+		}
+	public GameController(GameModel model, GameMenu menu) {
+		this.model = model;
+		menu = new GameMenu(model, this);
+		}
 	@Override
 	public void keyPressed(KeyEvent e) {
 	    int speed = model.getPaddle1().getSpeed();
@@ -97,27 +103,24 @@ public class GameController implements ControllerInterface {
 
 	@Override
 	public void startGame() {
-		model.newBall();
-		model.newPaddles();
-		model.newScore();
-		
-	}
+		menu.hidee();
+}
 
 	@Override
 	public void openMore() {
-		view.moreMenu();
+		menu.moreMenu();
 		
 	}
 
 	@Override
 	public void openHelp() {
-	    view.helpMenu();
+	    menu.helpMenu();
 	}
 
 
 	@Override
 	public void exitGame() {
-		view.exitMenu();
+		menu.exitMenu();
 		
 	}
 	
